@@ -10,5 +10,12 @@
     "lint:web": "pnpm --filter @reqflow/web lint",
     "test:web": "pnpm --filter @reqflow/web test",
     "dev": "pnpm --parallel dev"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.10.0",
+    "eslint-plugin-vue": "^10.11.0",
+    "globals": "^17.12.0",
+    "typescript-eslint": "^8.70.0"
   }
 }
