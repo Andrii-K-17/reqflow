@@ -45,7 +45,10 @@ async def create_project(
     project, role = await service.create_project(
         name=payload.name, description=payload.description, owner_id=current_user.id
     )
+
     await db.commit()
+    await db.refresh(project)
+
     return _to_read_model(project, role)
 
 
@@ -93,7 +96,9 @@ async def update_project(
         raise HTTPException(status.HTTP_404_NOT_FOUND, str(exc)) from exc
     except ProjectAccessDeniedError as exc:
         raise HTTPException(status.HTTP_403_FORBIDDEN, str(exc)) from exc
+
     await db.commit()
+    await db.refresh(project)
 
     return _to_read_model(project, role)
 
