@@ -1,7 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
-import LoginView from '@/views/auth/LoginView.vue'
-import RegisterView from '@/views/auth/RegisterView.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -9,14 +7,71 @@ const router = createRouter({
     {
       path: '/login',
       name: 'login',
-      component: LoginView,
+      component: () => import('@/views/auth/LoginView.vue'),
       meta: { public: true },
     },
     {
       path: '/register',
       name: 'register',
-      component: RegisterView,
+      component: () => import('@/views/auth/RegisterView.vue'),
       meta: { public: true },
+    },
+    {
+      path: '/projects',
+      name: 'projects',
+      component: () => import('@/views/ProjectsDashboardView.vue'),
+    },
+    {
+      path: '/projects/:projectId',
+      component: () => import('@/views/project/ProjectLayout.vue'),
+      children: [
+        {
+          path: '',
+          redirect: to => ({ name: 'project-vision', params: to.params }),
+        },
+        {
+          path: 'vision',
+          name: 'project-vision',
+          component: () => import('@/views/ProjectsDashboardView.vue'),
+          props: { title: 'Vision / Concept' },
+        },
+        {
+          path: 'requirements',
+          name: 'project-requirements',
+          component: () => import('@/views/ProjectsDashboardView.vue'),
+          props: { title: 'Requirements' },
+        },
+        {
+          path: 'use-cases',
+          name: 'project-use-cases',
+          component: () => import('@/views/ProjectsDashboardView.vue'),
+          props: { title: 'Use Cases' },
+        },
+        {
+          path: 'diagrams',
+          name: 'project-diagrams',
+          component: () => import('@/views/ProjectsDashboardView.vue'),
+          props: { title: 'Diagrams' },
+        },
+        {
+          path: 'traceability',
+          name: 'project-traceability',
+          component: () => import('@/views/ProjectsDashboardView.vue'),
+          props: { title: 'Traceability' },
+        },
+        {
+          path: 'documents',
+          name: 'project-documents',
+          component: () => import('@/views/ProjectsDashboardView.vue'),
+          props: { title: 'Documents' },
+        },
+        {
+          path: 'ai',
+          name: 'project-ai',
+          component: () => import('@/views/ProjectsDashboardView.vue'),
+          props: { title: 'AI Assistant' },
+        },
+      ],
     },
     {
       path: '/',

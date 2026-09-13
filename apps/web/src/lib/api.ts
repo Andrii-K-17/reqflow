@@ -1,4 +1,5 @@
-import axios, { type AxiosInstance, type InternalAxiosRequestConfig } from 'axios'
+import axios from 'axios'
+import type { AxiosInstance, InternalAxiosRequestConfig } from 'axios'
 import { useAuthStore } from '@/stores/auth'
 
 const api: AxiosInstance = axios.create({ baseURL: '/api' })

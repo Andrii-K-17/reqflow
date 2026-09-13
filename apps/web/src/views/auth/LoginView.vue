@@ -5,15 +5,21 @@ import { z } from 'zod'
 import { useRouter } from 'vue-router'
 import { ref } from 'vue'
 import { useAuthStore } from '@/stores/auth'
+import { Mail, Lock, Loader2, AlertCircle, Eye, EyeOff, MoonIcon, SunIcon } from '@lucide/vue'
+import { useDark, useToggle } from '@vueuse/core'
+
+const isDark = useDark()
+const toggleDark = useToggle(isDark)
 
 const schema = toTypedSchema(
   z.object({
-    email: z.string().email('Введіть коректний email'),
-    password: z.string().min(1, 'Введіть пароль'),
+    email: z.email('Please enter a valid email'),
+    password: z.string().min(1, 'Please enter your password'),
   }),
 )
 
 const { handleSubmit, defineField, errors } = useForm({ validationSchema: schema })
+
 const [email, emailAttrs] = defineField('email')
 const [password, passwordAttrs] = defineField('password')
 
@@ -21,6 +27,7 @@ const auth = useAuthStore()
 const router = useRouter()
 const serverError = ref<string | null>(null)
 const isSubmitting = ref(false)
+const showPassword = ref(false)
 
 const onSubmit = handleSubmit(async values => {
   serverError.value = null
@@ -29,7 +36,7 @@ const onSubmit = handleSubmit(async values => {
     await auth.login(values)
     router.push({ name: 'projects' })
   } catch {
-    serverError.value = 'Невірний email або пароль'
+    serverError.value = 'Incorrect email or password'
   } finally {
     isSubmitting.value = false
   }
@@ -37,46 +44,118 @@ const onSubmit = handleSubmit(async values => {
 </script>
 
 <template>
-  <main class="flex min-h-screen items-center justify-center bg-slate-50">
-    <form
-      class="w-full max-w-sm rounded-lg border border-slate-200 bg-white p-8 shadow-sm"
-      @submit="onSubmit"
+  <main
+    class="flex min-h-screen items-center justify-center bg-gradient-to-tr from-indigo-300/50 to-blue-200/50 px-4 dark:from-slate-950 dark:to-slate-900"
+  >
+    <button
+      @click="toggleDark()"
+      class="absolute top-4 right-4 z-10 p-2 rounded-xl text-slate-900 hover:text-sky-500 dark:text-slate-300 dark:hover:text-sky-400 hover:cursor-pointer transform transition-transform active:scale-110"
+      aria-label="Toggle dark mode"
     >
-      <h1 class="mb-6 text-xl font-semibold text-slate-900">Увійти в ReqFlow</h1>
+      <SunIcon v-if="isDark" class="w-6 h-6" />
+      <MoonIcon v-else class="w-6 h-6" />
+    </button>
 
-      <label class="mb-1 block text-sm font-medium text-slate-700">Email</label>
-      <input
-        v-model="email"
-        v-bind="emailAttrs"
-        type="email"
-        class="mb-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
-      />
-      <p v-if="errors.email" class="mb-2 text-xs text-red-600">{{ errors.email }}</p>
+    <form class="w-full max-w-md p-10" @submit="onSubmit">
+      <div class="mb-8 flex flex-col items-center text-center">
+        <div class="flex items-center justify-center gap-3">
+          <img src="/icon.svg" alt="ReqFlow logo" class="size-11" />
+          <h1 class="text-5xl select-none font tracking-tight text-sky-500 dark:text-sky-400">
+            ReqFlow
+          </h1>
+        </div>
 
-      <label class="mb-1 block text-sm font-medium text-slate-700">Пароль</label>
-      <input
-        v-model="password"
-        v-bind="passwordAttrs"
-        type="password"
-        class="mb-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
-      />
-      <p v-if="errors.password" class="mb-2 text-xs text-red-600">{{ errors.password }}</p>
+        <p class="mt-3 text-sm text-slate-700 dark:text-slate-300">
+          Welcome back! Please enter your details
+        </p>
+      </div>
 
-      <p v-if="serverError" class="mb-3 text-xs text-red-600">{{ serverError }}</p>
+      <div class="mb-5">
+        <label class="mb-1.5 block text-md tracking-wider text-slate-700 dark:text-slate-300">
+          Email address
+        </label>
+        <div class="relative">
+          <Mail
+            class="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-600 dark:text-slate-400"
+          />
+          <input
+            v-model="email"
+            v-bind="emailAttrs"
+            type="email"
+            spellcheck="false"
+            placeholder="you@example.com"
+            class="w-full rounded-xl border border-blue-400/50 bg-blue-50/40 py-3 pl-11 pr-4 text-md text-slate-800 placeholder:text-slate-500/80 outline-none transition-all focus:border-blue-400 focus:bg-gray-100 focus:ring-2 focus:ring-blue-200/30 dark:border-slate-700 dark:bg-slate-900/90 dark:text-white dark:focus:border-blue-900/80 dark:focus:bg-slate-950/80 dark:focus:ring-blue-950/50"
+          />
+        </div>
+        <p
+          v-if="errors.email"
+          class="mt-1.5 flex items-center gap-1 text-xs text-red-500 dark:text-red-400"
+        >
+          <AlertCircle class="h-3.5 w-3.5 shrink-0" />
+          {{ errors.email }}
+        </p>
+      </div>
+
+      <div class="mb-6">
+        <label class="mb-1.5 block text-md tracking-wider text-slate-700 dark:text-slate-300">
+          Password
+        </label>
+        <div class="relative">
+          <Lock
+            class="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-600 dark:text-slate-400"
+          />
+          <input
+            v-model="password"
+            v-bind="passwordAttrs"
+            spellcheck="false"
+            :type="showPassword ? 'text' : 'password'"
+            placeholder="••••••••••"
+            class="w-full rounded-xl border border-blue-400/50 bg-blue-50/40 py-3 pl-11 pr-4 text-md text-slate-800 placeholder:text-slate-500/80 outline-none transition-all focus:border-blue-400 focus:bg-gray-100 focus:ring-2 focus:ring-blue-200/30 dark:border-slate-700 dark:bg-slate-900/90 dark:text-white dark:focus:border-blue-900/80 dark:focus:bg-slate-950/80 dark:focus:ring-blue-950/50"
+          />
+          <button
+            type="button"
+            tabindex="-1"
+            class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 transition-colors hover:text-blue-500 dark:text-slate-600 dark:hover:text-blue-400"
+            @click="showPassword = !showPassword"
+          >
+            <EyeOff v-if="showPassword" class="h-4 w-4" />
+            <Eye v-else class="h-4 w-4" />
+          </button>
+        </div>
+        <p
+          v-if="errors.password"
+          class="mt-1.5 flex items-center gap-1 text-xs text-red-500 dark:text-red-400"
+        >
+          <AlertCircle class="h-3.5 w-3.5 shrink-0" />
+          {{ errors.password }}
+        </p>
+      </div>
+
+      <p
+        v-if="serverError"
+        class="mb-4 flex items-center gap-2 rounded-xl bg-red-50/60 px-4 py-3 text-xs text-red-600 backdrop-blur-sm dark:bg-red-500/10 dark:text-red-400"
+      >
+        <AlertCircle class="h-4 w-4 shrink-0" />
+        {{ serverError }}
+      </p>
 
       <button
         type="submit"
         :disabled="isSubmitting"
-        class="w-full rounded-md bg-slate-900 py-2 text-sm font-medium text-white disabled:opacity-50"
+        class="flex w-full items-center justify-center gap-2 rounded-xl bg-sky-500 py-3 text-xl cursor-pointer font-medium text-white transition-all hover:bg-blue-500 hover:shadow-md active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60 dark:bg-sky-600 dark:hover:bg-blue-600"
       >
-        Увійти
+        <Loader2 v-if="isSubmitting" class="h-4 w-4 animate-spin" />
+        {{ isSubmitting ? 'Signing in...' : 'Sign in' }}
       </button>
 
-      <p class="mt-4 text-center text-sm text-slate-600">
-        Немає акаунта?
-        <router-link :to="{ name: 'register' }" class="font-medium text-slate-900 underline"
-          >Зареєструватися</router-link
+      <p class="mt-3 text-center text-md text-slate-700 dark:text-slate-300">
+        Don't have an account?
+        <router-link
+          :to="{ name: 'register' }"
+          class="font-semibold text-blue-500 hover:text-blue-600 hover:underline dark:text-blue-500 dark:hover:text-blue-400"
         >
+          Sign up
+        </router-link>
       </p>
     </form>
   </main>

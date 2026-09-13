@@ -1,65 +1,67 @@
 import { defineStore } from 'pinia'
+import { ref, computed } from 'vue'
 import router from '@/router'
 import api from '@/lib/api'
 import type { TokenPair, User } from '@/types/auth'
 
-interface AuthState {
-  accessToken: string | null
-  refreshToken: string | null
-  user: User | null
-}
+export const useAuthStore = defineStore('auth', () => {
+  const accessToken = ref<string | null>(localStorage.getItem('reqflow_access_token'))
+  const refreshToken = ref<string | null>(localStorage.getItem('reqflow_refresh_token'))
+  const user = ref<User | null>(null)
 
-export const useAuthStore = defineStore('auth', {
-  state: (): AuthState => ({
-    accessToken: localStorage.getItem('reqflow_access_token'),
-    refreshToken: localStorage.getItem('reqflow_refresh_token'),
-    user: null,
-  }),
+  const isAuthenticated = computed(() => Boolean(accessToken.value))
 
-  getters: {
-    isAuthenticated: state => Boolean(state.accessToken),
-  },
+  function setTokens(tokens: TokenPair) {
+    accessToken.value = tokens.access_token
+    refreshToken.value = tokens.refresh_token
+    localStorage.setItem('reqflow_access_token', tokens.access_token)
+    localStorage.setItem('reqflow_refresh_token', tokens.refresh_token)
+  }
 
-  actions: {
-    setTokens(tokens: TokenPair) {
-      this.accessToken = tokens.access_token
-      this.refreshToken = tokens.refresh_token
-      localStorage.setItem('reqflow_access_token', tokens.access_token)
-      localStorage.setItem('reqflow_refresh_token', tokens.refresh_token)
-    },
+  async function register(payload: { email: string; password: string; full_name: string }) {
+    const { data } = await api.post<TokenPair>('/auth/register', payload)
+    setTokens(data)
+    await fetchCurrentUser()
+  }
 
-    async register(payload: { email: string; password: string; full_name: string }) {
-      const { data } = await api.post<TokenPair>('/auth/register', payload)
-      this.setTokens(data)
-      await this.fetchCurrentUser()
-    },
+  async function login(payload: { email: string; password: string }) {
+    const { data } = await api.post<TokenPair>('/auth/login', payload)
+    setTokens(data)
+    await fetchCurrentUser()
+  }
 
-    async login(payload: { email: string; password: string }) {
-      const { data } = await api.post<TokenPair>('/auth/login', payload)
-      this.setTokens(data)
-      await this.fetchCurrentUser()
-    },
+  async function refreshTokens() {
+    if (!refreshToken.value) throw new Error('No refresh token available')
+    const { data } = await api.post<TokenPair>('/auth/refresh', {
+      refresh_token: refreshToken.value,
+    })
+    setTokens(data)
+  }
 
-    async refreshTokens() {
-      if (!this.refreshToken) throw new Error('No refresh token available')
-      const { data } = await api.post<TokenPair>('/auth/refresh', {
-        refresh_token: this.refreshToken,
-      })
-      this.setTokens(data)
-    },
+  async function fetchCurrentUser() {
+    const { data } = await api.get<User>('/auth/me')
+    user.value = data
+  }
 
-    async fetchCurrentUser() {
-      const { data } = await api.get<User>('/auth/me')
-      this.user = data
-    },
+  function logout() {
+    accessToken.value = null
+    refreshToken.value = null
+    user.value = null
+    localStorage.removeItem('reqflow_access_token')
+    localStorage.removeItem('reqflow_refresh_token')
+    router.push({ name: 'login' })
+  }
 
-    logout() {
-      this.accessToken = null
-      this.refreshToken = null
-      this.user = null
-      localStorage.removeItem('reqflow_access_token')
-      localStorage.removeItem('reqflow_refresh_token')
-      router.push({ name: 'login' })
-    },
-  },
+  return {
+    accessToken,
+    refreshToken,
+    user,
+    isAuthenticated,
+    setTokens,
+    register,
+    login,
+    refreshTokens,
+    fetchCurrentUser,
+    logout,
+  }
 })
