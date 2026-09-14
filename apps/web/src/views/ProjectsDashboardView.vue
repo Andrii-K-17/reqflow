@@ -49,10 +49,10 @@ function openProject(projectId: string) {
           <MoonIcon v-else class="w-5 h-5" />
         </button>
 
-        <span class="text-sm text-slate-700 dark:text-slate-300">{{ auth.user?.full_name }}</span>
+        <span class="text-base text-slate-700 dark:text-slate-300">{{ auth.user?.full_name }}</span>
 
         <button
-          class="flex items-center gap-1.5 text-sm text-slate-600 transition-colors hover:text-blue-500 dark:text-slate-400 dark:hover:text-blue-400 hover:cursor-pointer"
+          class="flex items-center gap-1.5 text-base text-slate-600 transition-colors hover:text-blue-500 dark:text-slate-400 dark:hover:text-blue-400 hover:cursor-pointer"
           @click="auth.logout"
         >
           <LogOut class="h-4 w-4" />
@@ -65,7 +65,7 @@ function openProject(projectId: string) {
       <div class="mb-6 flex items-center justify-between">
         <h2 class="text-xl font-semibold text-slate-900 dark:text-white">My Projects</h2>
         <button
-          class="flex items-center gap-2 rounded-xl bg-sky-500 px-4 py-2.5 text-sm font-medium text-white transition-all hover:bg-blue-500 hover:shadow-md active:scale-[0.98] cursor-pointer dark:bg-sky-600 dark:hover:bg-blue-600"
+          class="flex items-center gap-2 rounded-xl bg-sky-500 px-4 py-2.5 text-base font-medium text-white transition-all hover:bg-blue-500 hover:shadow-md active:scale-[0.98] cursor-pointer dark:bg-sky-600 dark:hover:bg-blue-600"
           @click="isModalOpen = true"
         >
           <Plus class="h-4 w-4" />
@@ -75,7 +75,7 @@ function openProject(projectId: string) {
 
       <div
         v-if="projects.isLoading"
-        class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400"
+        class="flex items-center gap-2 text-base text-slate-600 dark:text-slate-400"
       >
         <Loader2 class="h-4 w-4 animate-spin" />
         Loading…
@@ -83,7 +83,7 @@ function openProject(projectId: string) {
 
       <div
         v-else-if="projects.projects.length === 0"
-        class="rounded-xl border border-blue-400/30 bg-blue-50/40 px-5 py-6 text-center text-sm text-slate-600 dark:border-slate-700 dark:bg-slate-900/60 dark:text-slate-400"
+        class="rounded-xl border border-blue-400/30 bg-blue-50/40 px-5 py-6 text-center text-base text-slate-600 dark:border-slate-700 dark:bg-slate-900/60 dark:text-slate-400"
       >
         No projects yet. Create your first one.
       </div>
@@ -103,7 +103,7 @@ function openProject(projectId: string) {
             </div>
             <div class="min-w-0 flex-1">
               <h3 class="font-medium text-slate-900 dark:text-white">{{ project.name }}</h3>
-              <p class="mt-1 line-clamp-2 text-sm text-slate-600 dark:text-slate-400">
+              <p class="mt-1 line-clamp-2 text-base text-slate-600 dark:text-slate-400">
                 {{ project.description || 'No description' }}
               </p>
               <span

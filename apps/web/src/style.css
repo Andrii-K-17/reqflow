@@ -25,3 +25,12 @@ html.dark input:-webkit-autofill:focus {
   box-shadow: 0 0 0px 1000px #020617 inset;
   -webkit-text-fill-color: #ffffff;
 }
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #8cc8e4 transparent;
+}
+
+.dark * {
+  scrollbar-color: #507586 transparent;
+}

@@ -47,10 +47,10 @@ onMounted(() => {
 
 <template>
   <div
-    class="min-h-screen bg-gradient-to-tr from-indigo-300/50 to-blue-200/50 dark:from-slate-950 dark:to-slate-900"
+    class="h-screen flex flex-col overflow-hidden bg-gradient-to-tr from-indigo-300/50 to-blue-200/50 dark:from-slate-950 dark:to-slate-900"
   >
     <header
-      class="flex items-center justify-between border-b border-blue-400/30 bg-white/70 px-8 py-4 backdrop-blur-sm dark:border-slate-800 dark:bg-slate-900/70"
+      class="flex flex-shrink-0 items-center justify-between border-b border-blue-400/30 bg-white/70 px-8 py-4 backdrop-blur-sm dark:border-slate-800 dark:bg-slate-900/70"
     >
       <div class="flex items-center gap-2.5">
         <img src="/icon.svg" alt="ReqFlow logo" class="size-7" />
@@ -69,10 +69,10 @@ onMounted(() => {
           <MoonIcon v-else class="w-5 h-5" />
         </button>
 
-        <span class="text-sm text-slate-700 dark:text-slate-300">{{ auth.user?.full_name }}</span>
+        <span class="text-base text-slate-700 dark:text-slate-300">{{ auth.user?.full_name }}</span>
 
         <button
-          class="flex items-center gap-1.5 text-sm text-slate-600 transition-colors hover:text-blue-500 dark:text-slate-400 dark:hover:text-blue-400 hover:cursor-pointer"
+          class="flex items-center gap-1.5 text-base text-slate-600 transition-colors hover:text-blue-500 dark:text-slate-400 dark:hover:text-blue-400 hover:cursor-pointer"
           @click="auth.logout"
         >
           <LogOut class="h-4 w-4" />
@@ -81,14 +81,14 @@ onMounted(() => {
       </div>
     </header>
 
-    <div class="flex">
+    <div class="flex flex-1 min-h-0">
       <aside
-        class="w-64 shrink-0 border-r border-blue-400/30 bg-white/70 backdrop-blur-sm dark:border-slate-800 dark:bg-slate-900/70"
+        class="w-64 shrink-0 flex flex-col h-full border-r border-blue-400/30 bg-white/70 backdrop-blur-sm dark:border-slate-800 dark:bg-slate-900/70"
       >
-        <div class="border-b border-blue-400/30 px-5 py-4 dark:border-slate-800">
+        <div class="border-b border-blue-400/30 px-5 py-4 dark:border-slate-800 shrink-0">
           <router-link
             :to="{ name: 'projects' }"
-            class="flex items-center gap-1.5 text-sm text-slate-600 transition-colors hover:text-blue-500 dark:text-slate-400 dark:hover:text-blue-400"
+            class="flex items-center gap-1.5 text-base text-slate-600 transition-colors hover:text-blue-500 dark:text-slate-400 dark:hover:text-blue-400"
           >
             <ArrowLeft class="h-3.5 w-3.5" />
             All projects
@@ -105,12 +105,12 @@ onMounted(() => {
           </div>
         </div>
 
-        <nav class="flex flex-col gap-1 p-3">
+        <nav class="flex flex-col gap-1 p-3 flex-1 min-h-0 overflow-y-auto scrollbar-thin">
           <router-link
             v-for="item in navItems"
             :key="item.name"
             :to="{ name: item.name, params: { projectId } }"
-            class="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm text-slate-700 transition-all hover:bg-blue-50/70 dark:text-slate-300 dark:hover:bg-slate-800/70"
+            class="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-base text-slate-700 transition-all hover:bg-blue-50/70 dark:text-slate-300 dark:hover:bg-slate-800/70"
             active-class="!bg-sky-500 !text-white dark:!bg-sky-600 hover:!bg-sky-500 dark:hover:!bg-sky-600"
           >
             <component :is="item.icon" class="h-4 w-4 shrink-0" />
@@ -119,7 +119,7 @@ onMounted(() => {
         </nav>
       </aside>
 
-      <section class="flex-1">
+      <section class="flex flex-1 flex-col p-8 overflow-hidden">
         <router-view />
       </section>
     </div>

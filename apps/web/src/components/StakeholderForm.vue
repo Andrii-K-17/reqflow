@@ -3,30 +3,36 @@ import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
 import { z } from 'zod'
 import { ref } from 'vue'
-import { useProjectsStore } from '@/stores/projects'
-import { FolderKanban, AlignLeft, Loader2, AlertCircle, X } from '@lucide/vue'
+import { useRoute } from 'vue-router'
+import { useStakeholdersStore } from '@/stores/stakeholders'
+import { UserRound, Layers, AlignLeft, Loader2, AlertCircle, X } from '@lucide/vue'
 
-const emit = defineEmits<{ close: []; created: [] }>()
+const emit = defineEmits<{ close: [] }>()
 
 const schema = toTypedSchema(
   z.object({
-    name: z.string().min(1, 'Please enter a project name'),
-    description: z.string().optional(),
+    name: z.string().min(1, 'Please enter a role name'),
+    category: z.enum(['PRIMARY', 'SECONDARY', 'EXTERNAL']),
+    interest_description: z.string().optional(),
   }),
 )
 
-const { handleSubmit, defineField, errors } = useForm({ validationSchema: schema })
+const { handleSubmit, defineField, errors } = useForm({
+  validationSchema: schema,
+  initialValues: { category: 'PRIMARY' },
+})
 const [name, nameAttrs] = defineField('name')
-const [description, descriptionAttrs] = defineField('description')
+const [category, categoryAttrs] = defineField('category')
+const [interestDescription, interestDescriptionAttrs] = defineField('interest_description')
 
-const projects = useProjectsStore()
+const route = useRoute()
+const stakeholders = useStakeholdersStore()
 const isSubmitting = ref(false)
 
 const onSubmit = handleSubmit(async values => {
   isSubmitting.value = true
   try {
-    await projects.createProject(values)
-    emit('created')
+    await stakeholders.create(route.params.projectId as string, values)
     emit('close')
   } finally {
     isSubmitting.value = false
@@ -44,7 +50,7 @@ const onSubmit = handleSubmit(async values => {
       @submit="onSubmit"
     >
       <div class="mb-6 flex items-center justify-between">
-        <h2 class="text-xl font-semibold text-slate-900 dark:text-white">New project</h2>
+        <h2 class="text-xl font-semibold text-slate-900 dark:text-white">New stakeholder</h2>
         <button
           type="button"
           class="p-1.5 rounded-lg text-slate-400 hover:text-sky-500 dark:text-slate-500 dark:hover:text-sky-400 hover:cursor-pointer transform transition-transform active:scale-110"
@@ -57,10 +63,10 @@ const onSubmit = handleSubmit(async values => {
 
       <div class="mb-5">
         <label class="mb-1.5 block text-base tracking-wider text-slate-700 dark:text-slate-300">
-          Name
+          Name / role
         </label>
         <div class="relative">
-          <FolderKanban
+          <UserRound
             class="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-600 dark:text-slate-400"
           />
           <input
@@ -68,7 +74,7 @@ const onSubmit = handleSubmit(async values => {
             v-bind="nameAttrs"
             type="text"
             spellcheck="false"
-            placeholder="My awesome project"
+            placeholder="Name"
             class="w-full rounded-xl border border-blue-400/50 bg-blue-50/40 py-3 pl-11 pr-4 text-base text-slate-800 placeholder:text-slate-500/80 outline-none transition-all focus:border-blue-400 focus:bg-gray-100 focus:ring-2 focus:ring-blue-200/30 dark:border-slate-700 dark:bg-slate-900/90 dark:text-white dark:focus:border-blue-900/80 dark:focus:bg-slate-950/80 dark:focus:ring-blue-950/50"
           />
         </div>
@@ -81,19 +87,39 @@ const onSubmit = handleSubmit(async values => {
         </p>
       </div>
 
+      <div class="mb-5">
+        <label class="mb-1.5 block text-base tracking-wider text-slate-700 dark:text-slate-300">
+          Category
+        </label>
+        <div class="relative">
+          <Layers
+            class="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-600 dark:text-slate-400"
+          />
+          <select
+            v-model="category"
+            v-bind="categoryAttrs"
+            class="w-full appearance-none rounded-xl border border-blue-400/50 bg-blue-50/40 py-3 pl-11 pr-4 text-base text-slate-800 outline-none transition-all focus:border-blue-400 focus:bg-gray-100 focus:ring-2 focus:ring-blue-200/30 dark:border-slate-700 dark:bg-slate-900/90 dark:text-white dark:focus:border-blue-900/80 dark:focus:bg-slate-950/80 dark:focus:ring-blue-950/50"
+          >
+            <option value="PRIMARY">Primary</option>
+            <option value="SECONDARY">Secondary</option>
+            <option value="EXTERNAL">External</option>
+          </select>
+        </div>
+      </div>
+
       <div class="mb-6">
         <label class="mb-1.5 block text-base tracking-wider text-slate-700 dark:text-slate-300">
-          Description (optional)
+          Interest / role in the system (optional)
         </label>
         <div class="relative">
           <AlignLeft
             class="pointer-events-none absolute left-3.5 top-3.5 h-4 w-4 text-slate-600 dark:text-slate-400"
           />
           <textarea
-            v-model="description"
-            v-bind="descriptionAttrs"
+            v-model="interestDescription"
+            v-bind="interestDescriptionAttrs"
             rows="3"
-            placeholder="What is this project about?"
+            placeholder="What does this stakeholder need from the system?"
             class="w-full rounded-xl border border-blue-400/50 bg-blue-50/40 py-3 pl-11 pr-4 text-base text-slate-800 placeholder:text-slate-500/80 outline-none transition-all resize-none focus:border-blue-400 focus:bg-gray-100 focus:ring-2 focus:ring-blue-200/30 dark:border-slate-700 dark:bg-slate-900/90 dark:text-white dark:focus:border-blue-900/80 dark:focus:bg-slate-950/80 dark:focus:ring-blue-950/50"
           />
         </div>
@@ -113,7 +139,7 @@ const onSubmit = handleSubmit(async values => {
           class="flex items-center justify-center gap-2 rounded-xl bg-sky-500 px-5 py-2.5 text-base cursor-pointer font-medium text-white transition-all hover:bg-blue-500 hover:shadow-md active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60 dark:bg-sky-600 dark:hover:bg-blue-600"
         >
           <Loader2 v-if="isSubmitting" class="h-4 w-4 animate-spin" />
-          {{ isSubmitting ? 'Creating...' : 'Create' }}
+          {{ isSubmitting ? 'Adding...' : 'Add' }}
         </button>
       </div>
     </form>

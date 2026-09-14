@@ -65,13 +65,13 @@ const onSubmit = handleSubmit(async values => {
           </h1>
         </div>
 
-        <p class="mt-3 text-sm text-slate-700 dark:text-slate-300">
+        <p class="mt-3 text-base text-slate-700 dark:text-slate-300">
           Welcome back! Please enter your details
         </p>
       </div>
 
       <div class="mb-5">
-        <label class="mb-1.5 block text-md tracking-wider text-slate-700 dark:text-slate-300">
+        <label class="mb-1.5 block text-base tracking-wider text-slate-700 dark:text-slate-300">
           Email address
         </label>
         <div class="relative">
@@ -84,7 +84,7 @@ const onSubmit = handleSubmit(async values => {
             type="email"
             spellcheck="false"
             placeholder="you@example.com"
-            class="w-full rounded-xl border border-blue-400/50 bg-blue-50/40 py-3 pl-11 pr-4 text-md text-slate-800 placeholder:text-slate-500/80 outline-none transition-all focus:border-blue-400 focus:bg-gray-100 focus:ring-2 focus:ring-blue-200/30 dark:border-slate-700 dark:bg-slate-900/90 dark:text-white dark:focus:border-blue-900/80 dark:focus:bg-slate-950/80 dark:focus:ring-blue-950/50"
+            class="w-full rounded-xl border border-blue-400/50 bg-blue-50/40 py-3 pl-11 pr-4 text-base text-slate-800 placeholder:text-slate-500/80 outline-none transition-all focus:border-blue-400 focus:bg-gray-100 focus:ring-2 focus:ring-blue-200/30 dark:border-slate-700 dark:bg-slate-900/90 dark:text-white dark:focus:border-blue-900/80 dark:focus:bg-slate-950/80 dark:focus:ring-blue-950/50"
           />
         </div>
         <p
@@ -97,7 +97,7 @@ const onSubmit = handleSubmit(async values => {
       </div>
 
       <div class="mb-6">
-        <label class="mb-1.5 block text-md tracking-wider text-slate-700 dark:text-slate-300">
+        <label class="mb-1.5 block text-base tracking-wider text-slate-700 dark:text-slate-300">
           Password
         </label>
         <div class="relative">
@@ -110,7 +110,7 @@ const onSubmit = handleSubmit(async values => {
             spellcheck="false"
             :type="showPassword ? 'text' : 'password'"
             placeholder="••••••••••"
-            class="w-full rounded-xl border border-blue-400/50 bg-blue-50/40 py-3 pl-11 pr-4 text-md text-slate-800 placeholder:text-slate-500/80 outline-none transition-all focus:border-blue-400 focus:bg-gray-100 focus:ring-2 focus:ring-blue-200/30 dark:border-slate-700 dark:bg-slate-900/90 dark:text-white dark:focus:border-blue-900/80 dark:focus:bg-slate-950/80 dark:focus:ring-blue-950/50"
+            class="w-full rounded-xl border border-blue-400/50 bg-blue-50/40 py-3 pl-11 pr-4 text-base text-slate-800 placeholder:text-slate-500/80 outline-none transition-all focus:border-blue-400 focus:bg-gray-100 focus:ring-2 focus:ring-blue-200/30 dark:border-slate-700 dark:bg-slate-900/90 dark:text-white dark:focus:border-blue-900/80 dark:focus:bg-slate-950/80 dark:focus:ring-blue-950/50"
           />
           <button
             type="button"
@@ -148,7 +148,7 @@ const onSubmit = handleSubmit(async values => {
         {{ isSubmitting ? 'Signing in...' : 'Sign in' }}
       </button>
 
-      <p class="mt-3 text-center text-md text-slate-700 dark:text-slate-300">
+      <p class="mt-3 text-center text-base text-slate-700 dark:text-slate-300">
         Don't have an account?
         <router-link
           :to="{ name: 'register' }"
