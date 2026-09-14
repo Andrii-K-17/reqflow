@@ -119,7 +119,7 @@ onMounted(() => {
         </nav>
       </aside>
 
-      <section class="flex flex-1 flex-col p-8 overflow-hidden">
+      <section class="flex flex-1 flex-col p-8 overflow-auto">
         <router-view />
       </section>
     </div>
