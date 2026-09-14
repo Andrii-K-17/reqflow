@@ -107,7 +107,7 @@ function openProject(projectId: string) {
                 {{ project.description || 'No description' }}
               </p>
               <span
-                class="mt-3 inline-block rounded-full bg-sky-100 px-2 py-0.5 text-xs text-sky-600 dark:bg-sky-500/10 dark:text-sky-400"
+                class="mt-3 inline-block rounded-full bg-sky-100 px-2 py-0.5 text-sm text-sky-600 dark:bg-sky-500/10 dark:text-sky-400"
               >
                 {{ project.my_role }}
               </span>

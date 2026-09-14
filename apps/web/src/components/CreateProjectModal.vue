@@ -68,13 +68,13 @@ const onSubmit = handleSubmit(async values => {
             v-bind="nameAttrs"
             type="text"
             spellcheck="false"
-            placeholder="My awesome project"
+            placeholder="My project"
             class="w-full rounded-xl border border-blue-400/50 bg-blue-50/40 py-3 pl-11 pr-4 text-base text-slate-800 placeholder:text-slate-500/80 outline-none transition-all focus:border-blue-400 focus:bg-gray-100 focus:ring-2 focus:ring-blue-200/30 dark:border-slate-700 dark:bg-slate-900/90 dark:text-white dark:focus:border-blue-900/80 dark:focus:bg-slate-950/80 dark:focus:ring-blue-950/50"
           />
         </div>
         <p
           v-if="errors.name"
-          class="mt-1.5 flex items-center gap-1 text-xs text-red-500 dark:text-red-400"
+          class="mt-1.5 flex items-center gap-1 text-sm text-red-500 dark:text-red-400"
         >
           <AlertCircle class="h-3.5 w-3.5 shrink-0" />
           {{ errors.name }}

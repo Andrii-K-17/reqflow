@@ -98,7 +98,7 @@ async function removeGoal(id: string) {
         >
           <table class="w-full text-base table-auto border-collapse">
             <thead
-              class="bg-blue-50/60 text-left shadow-sm text-xs uppercase tracking-wider text-slate-500 dark:bg-slate-900/80 dark:text-slate-400"
+              class="bg-blue-50/60 text-left shadow-sm text-sm uppercase tracking-wider text-slate-500 dark:bg-slate-900/80 dark:text-slate-400"
             >
               <tr>
                 <th
@@ -130,7 +130,7 @@ async function removeGoal(id: string) {
                 <td class="px-4 py-3 font-medium text-slate-900 dark:text-white">{{ s.name }}</td>
                 <td class="px-4 py-3">
                   <span
-                    class="rounded-full bg-sky-100 px-2 py-0.5 text-xs text-sky-600 dark:bg-sky-500/10 dark:text-sky-400"
+                    class="rounded-full bg-sky-100 px-2 py-0.5 text-sm text-sky-600 dark:bg-sky-500/10 dark:text-sky-400"
                   >
                     {{ categoryLabel[s.category] }}
                   </span>
@@ -140,7 +140,7 @@ async function removeGoal(id: string) {
                 </td>
                 <td class="px-4 py-3 text-right">
                   <button
-                    class="inline-flex items-center gap-1 text-xs text-red-500 transition-colors hover:text-red-600 dark:text-red-400 dark:hover:text-red-300 hover:cursor-pointer"
+                    class="inline-flex items-center gap-1 text-sm text-red-500 transition-colors hover:text-red-600 dark:text-red-400 dark:hover:text-red-300 hover:cursor-pointer"
                     @click="removeStakeholder(s.id)"
                   >
                     <Trash2 class="h-3.5 w-3.5" />
@@ -208,13 +208,13 @@ async function removeGoal(id: string) {
               </div>
               <div class="flex items-center gap-3">
                 <span
-                  class="rounded-full px-2 py-0.5 text-xs font-medium"
+                  class="rounded-full px-2 py-0.5 text-sm font-medium"
                   :class="priorityStyle[g.priority]"
                 >
                   {{ g.priority }}
                 </span>
                 <button
-                  class="inline-flex items-center gap-1 text-xs text-red-500 transition-colors hover:text-red-600 dark:text-red-400 dark:hover:text-red-300 hover:cursor-pointer"
+                  class="inline-flex items-center gap-1 text-sm text-red-500 transition-colors hover:text-red-600 dark:text-red-400 dark:hover:text-red-300 hover:cursor-pointer"
                   @click="removeGoal(g.id)"
                 >
                   <Trash2 class="h-3.5 w-3.5" />

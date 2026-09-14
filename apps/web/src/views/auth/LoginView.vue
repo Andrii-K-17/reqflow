@@ -89,7 +89,7 @@ const onSubmit = handleSubmit(async values => {
         </div>
         <p
           v-if="errors.email"
-          class="mt-1.5 flex items-center gap-1 text-xs text-red-500 dark:text-red-400"
+          class="mt-1.5 flex items-center gap-1 text-sm text-red-500 dark:text-red-400"
         >
           <AlertCircle class="h-3.5 w-3.5 shrink-0" />
           {{ errors.email }}
@@ -124,7 +124,7 @@ const onSubmit = handleSubmit(async values => {
         </div>
         <p
           v-if="errors.password"
-          class="mt-1.5 flex items-center gap-1 text-xs text-red-500 dark:text-red-400"
+          class="mt-1.5 flex items-center gap-1 text-sm text-red-500 dark:text-red-400"
         >
           <AlertCircle class="h-3.5 w-3.5 shrink-0" />
           {{ errors.password }}
@@ -133,7 +133,7 @@ const onSubmit = handleSubmit(async values => {
 
       <p
         v-if="serverError"
-        class="mb-4 flex items-center gap-2 rounded-xl bg-red-50/60 px-4 py-3 text-xs text-red-600 backdrop-blur-sm dark:bg-red-500/10 dark:text-red-400"
+        class="mb-4 flex items-center gap-2 rounded-xl bg-red-50/60 px-4 py-3 text-sm text-red-600 backdrop-blur-sm dark:bg-red-500/10 dark:text-red-400"
       >
         <AlertCircle class="h-4 w-4 shrink-0" />
         {{ serverError }}

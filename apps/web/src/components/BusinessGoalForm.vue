@@ -80,7 +80,7 @@ const onSubmit = handleSubmit(async values => {
         </div>
         <p
           v-if="errors.title"
-          class="mt-1.5 flex items-center gap-1 text-xs text-red-500 dark:text-red-400"
+          class="mt-1.5 flex items-center gap-1 text-sm text-red-500 dark:text-red-400"
         >
           <AlertCircle class="h-3.5 w-3.5 shrink-0" />
           {{ errors.title }}
