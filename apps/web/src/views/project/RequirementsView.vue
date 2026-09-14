@@ -4,6 +4,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useRequirementsStore } from '@/stores/requirements'
 import RequirementBadges from '@/components/RequirementBadges.vue'
 import type { RequirementFilters } from '@/types/requirement'
+import RequirementForm from '@/components/RequirementForm.vue'
 import {
   ListChecks,
   Plus,
@@ -18,6 +19,8 @@ const route = useRoute()
 const router = useRouter()
 const projectId = route.params.projectId as string
 const requirements = useRequirementsStore()
+
+const isFormOpen = ref(false)
 
 const filters = ref<RequirementFilters>({
   type: undefined,
@@ -37,10 +40,6 @@ watch(filters, load)
 function openRequirement(id: string) {
   router.push({ name: 'requirement-detail', params: { projectId, requirementId: id } })
 }
-
-function openCreateForm() {
-  router.push({ name: 'requirement-new', params: { projectId } })
-}
 </script>
 
 <template>
@@ -54,7 +53,7 @@ function openCreateForm() {
       </div>
       <button
         class="flex items-center gap-2 rounded-xl bg-sky-500 px-4 py-2.5 text-base font-medium text-white transition-all hover:bg-blue-500 hover:shadow-md active:scale-[0.98] cursor-pointer dark:bg-sky-600 dark:hover:bg-blue-600"
-        @click="openCreateForm"
+        @click="isFormOpen = true"
       >
         <Plus class="h-4 w-4" />
         New requirement
@@ -164,5 +163,7 @@ function openCreateForm() {
     <p class="mt-4 flex-shrink-0 text-sm text-slate-500 dark:text-slate-400">
       Total: {{ requirements.total }}
     </p>
+
+    <RequirementForm v-if="isFormOpen" @close="isFormOpen = false" />
   </section>
 </template>

@@ -40,11 +40,6 @@ const router = createRouter({
           component: () => import('@/views/project/RequirementsView.vue'),
         },
         {
-          path: 'requirements/new',
-          name: 'requirement-new',
-          component: () => import('@/views/ProjectsDashboardView.vue'),
-        },
-        {
           path: 'requirements/:requirementId',
           name: 'requirement-detail',
           component: () => import('@/views/ProjectsDashboardView.vue'),
