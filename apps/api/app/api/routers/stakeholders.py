@@ -74,6 +74,7 @@ async def update_stakeholder(
 
     await repo.flush()
     await db.commit()
+    await db.refresh(stakeholder)
 
     return stakeholder  # type: ignore
 

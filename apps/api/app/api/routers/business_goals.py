@@ -74,6 +74,7 @@ async def update_business_goal(
 
     await repo.flush()
     await db.commit()
+    await db.refresh(goal)
 
     return goal  # type: ignore
 
