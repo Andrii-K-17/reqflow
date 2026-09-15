@@ -42,7 +42,7 @@ const router = createRouter({
         {
           path: 'requirements/:requirementId',
           name: 'requirement-detail',
-          component: () => import('@/views/ProjectsDashboardView.vue'),
+          component: () => import('@/views/project/RequirementDetailView.vue'),
         },
         {
           path: 'use-cases',

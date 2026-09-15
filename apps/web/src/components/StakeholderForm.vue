@@ -5,6 +5,8 @@ import { z } from 'zod'
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStakeholdersStore } from '@/stores/stakeholders'
+import AppSelect from '@/components/ui/AppSelect.vue'
+import type { SelectOption } from '@/components/ui/AppSelect.vue'
 import { UserRound, Layers, AlignLeft, Loader2, AlertCircle, X } from '@lucide/vue'
 
 const emit = defineEmits<{ close: [] }>()
@@ -22,7 +24,7 @@ const { handleSubmit, defineField, errors } = useForm({
   initialValues: { category: 'PRIMARY' },
 })
 const [name, nameAttrs] = defineField('name')
-const [category, categoryAttrs] = defineField('category')
+const [category] = defineField('category')
 const [interestDescription, interestDescriptionAttrs] = defineField('interest_description')
 
 const route = useRoute()
@@ -38,6 +40,12 @@ const onSubmit = handleSubmit(async values => {
     isSubmitting.value = false
   }
 })
+
+const categoryOptions: SelectOption[] = [
+  { value: 'PRIMARY', label: 'Primary' },
+  { value: 'SECONDARY', label: 'Secondary' },
+  { value: 'EXTERNAL', label: 'External' },
+]
 </script>
 
 <template>
@@ -91,20 +99,7 @@ const onSubmit = handleSubmit(async values => {
         <label class="mb-1.5 block text-base tracking-wider text-slate-700 dark:text-slate-300">
           Category
         </label>
-        <div class="relative">
-          <Layers
-            class="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-600 dark:text-slate-400"
-          />
-          <select
-            v-model="category"
-            v-bind="categoryAttrs"
-            class="w-full appearance-none rounded-xl border border-blue-400/50 bg-blue-50/40 py-3 pl-11 pr-4 text-base text-slate-800 outline-none transition-all focus:border-blue-400 focus:bg-gray-100 focus:ring-2 focus:ring-blue-200/30 dark:border-slate-700 dark:bg-slate-900/90 dark:text-white dark:focus:border-blue-900/80 dark:focus:bg-slate-950/80 dark:focus:ring-blue-950/50"
-          >
-            <option value="PRIMARY">Primary</option>
-            <option value="SECONDARY">Secondary</option>
-            <option value="EXTERNAL">External</option>
-          </select>
-        </div>
+        <AppSelect v-model="category" :options="categoryOptions" :icon="Layers" />
       </div>
 
       <div class="mb-6">

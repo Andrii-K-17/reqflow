@@ -5,6 +5,8 @@ import { useRequirementsStore } from '@/stores/requirements'
 import RequirementBadges from '@/components/RequirementBadges.vue'
 import type { RequirementFilters } from '@/types/requirement'
 import RequirementForm from '@/components/RequirementForm.vue'
+import AppSelect from '@/components/ui/AppSelect.vue'
+import type { SelectOption } from '@/components/ui/AppSelect.vue'
 import {
   ListChecks,
   Plus,
@@ -12,7 +14,6 @@ import {
   Loader2,
   AlertTriangle,
   ChevronRight,
-  ChevronDown,
 } from '@lucide/vue'
 
 const route = useRoute()
@@ -40,6 +41,31 @@ watch(filters, load)
 function openRequirement(id: string) {
   router.push({ name: 'requirement-detail', params: { projectId, requirementId: id } })
 }
+
+const typeFilterOptions: SelectOption[] = [
+  { value: undefined, label: 'All types' },
+  { value: 'BUSINESS', label: 'Business' },
+  { value: 'USER', label: 'User' },
+  { value: 'FUNCTIONAL', label: 'Functional' },
+  { value: 'NONFUNCTIONAL', label: 'Non-functional' },
+  { value: 'SYSTEM', label: 'System' },
+]
+
+const statusFilterOptions: SelectOption[] = [
+  { value: undefined, label: 'All statuses' },
+  { value: 'DRAFT', label: 'Draft' },
+  { value: 'REVIEWED', label: 'Reviewed' },
+  { value: 'APPROVED', label: 'Approved' },
+  { value: 'REJECTED', label: 'Rejected' },
+]
+
+const priorityFilterOptions: SelectOption[] = [
+  { value: undefined, label: 'All priorities' },
+  { value: 'LOW', label: 'Low' },
+  { value: 'MEDIUM', label: 'Medium' },
+  { value: 'HIGH', label: 'High' },
+  { value: 'CRITICAL', label: 'Critical' },
+]
 </script>
 
 <template>
@@ -66,54 +92,11 @@ function openRequirement(id: string) {
         Filters:
       </div>
 
-      <div class="relative">
-        <select
-          v-model="filters.type"
-          class="peer w-full appearance-none rounded-xl border border-blue-400/50 bg-blue-50/40 pl-3 pr-9 py-2 text-sm text-slate-800 outline-none transition-all focus:border-blue-400 focus:bg-gray-100 focus:ring-2 focus:ring-blue-200/30 dark:border-slate-700 dark:bg-slate-900/90 dark:text-white dark:focus:border-blue-900/80 dark:focus:bg-slate-950/80 dark:focus:ring-blue-950/50"
-        >
-          <option :value="undefined">All types</option>
-          <option value="BUSINESS">Business</option>
-          <option value="USER">User</option>
-          <option value="FUNCTIONAL">Functional</option>
-          <option value="NONFUNCTIONAL">Non-functional</option>
-          <option value="SYSTEM">System</option>
-        </select>
-        <ChevronDown
-          class="pointer-events-none peer-focus:rotate-180 absolute transition-transform right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500 dark:text-slate-400"
-        />
-      </div>
+      <AppSelect class="w-42 !h-10" v-model="filters.type" :options="typeFilterOptions" />
 
-      <div class="relative">
-        <select
-          v-model="filters.status"
-          class="peer w-full appearance-none rounded-xl border border-blue-400/50 bg-blue-50/40 pl-3 pr-9 py-2 text-sm text-slate-800 outline-none transition-all focus:border-blue-400 focus:bg-gray-100 focus:ring-2 focus:ring-blue-200/30 dark:border-slate-700 dark:bg-slate-900/90 dark:text-white dark:focus:border-blue-900/80 dark:focus:bg-slate-950/80 dark:focus:ring-blue-950/50"
-        >
-          <option :value="undefined">All statuses</option>
-          <option value="DRAFT">Draft</option>
-          <option value="REVIEWED">Reviewed</option>
-          <option value="APPROVED">Approved</option>
-          <option value="REJECTED">Rejected</option>
-        </select>
-        <ChevronDown
-          class="pointer-events-none peer-focus:rotate-180 absolute transition-transform right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500 dark:text-slate-400"
-        />
-      </div>
+      <AppSelect class="w-42 !h-10" v-model="filters.status" :options="statusFilterOptions" />
 
-      <div class="relative">
-        <select
-          v-model="filters.priority"
-          class="peer w-full appearance-none rounded-xl border border-blue-400/50 bg-blue-50/40 pl-3 pr-9 py-2 text-sm text-slate-800 outline-none transition-all focus:border-blue-400 focus:bg-gray-100 focus:ring-2 focus:ring-blue-200/30 dark:border-slate-700 dark:bg-slate-900/90 dark:text-white dark:focus:border-blue-900/80 dark:focus:bg-slate-950/80 dark:focus:ring-blue-950/50"
-        >
-          <option :value="undefined">All priorities</option>
-          <option value="LOW">Low</option>
-          <option value="MEDIUM">Medium</option>
-          <option value="HIGH">High</option>
-          <option value="CRITICAL">Critical</option>
-        </select>
-        <ChevronDown
-          class="pointer-events-none peer-focus:rotate-180 absolute transition-transform right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500 dark:text-slate-400"
-        />
-      </div>
+      <AppSelect class="w-42 !h-10" v-model="filters.priority" :options="priorityFilterOptions" />
     </div>
 
     <div

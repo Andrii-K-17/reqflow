@@ -5,6 +5,8 @@ import { z } from 'zod'
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useBusinessGoalsStore } from '@/stores/businessGoals'
+import AppSelect from '@/components/ui/AppSelect.vue'
+import type { SelectOption } from '@/components/ui/AppSelect.vue'
 import { Target, AlignLeft, Flag, Loader2, AlertCircle, X } from '@lucide/vue'
 
 const emit = defineEmits<{ close: [] }>()
@@ -23,7 +25,7 @@ const { handleSubmit, defineField, errors } = useForm({
 })
 const [title, titleAttrs] = defineField('title')
 const [description, descriptionAttrs] = defineField('description')
-const [priority, priorityAttrs] = defineField('priority')
+const [priority] = defineField('priority')
 
 const route = useRoute()
 const goals = useBusinessGoalsStore()
@@ -38,6 +40,13 @@ const onSubmit = handleSubmit(async values => {
     isSubmitting.value = false
   }
 })
+
+const priorityOptions: SelectOption[] = [
+  { value: 'LOW', label: 'Low' },
+  { value: 'MEDIUM', label: 'Medium' },
+  { value: 'HIGH', label: 'High' },
+  { value: 'CRITICAL', label: 'Critical' },
+]
 </script>
 
 <template>
@@ -109,21 +118,7 @@ const onSubmit = handleSubmit(async values => {
         <label class="mb-1.5 block text-md tracking-wider text-slate-700 dark:text-slate-300">
           Priority
         </label>
-        <div class="relative">
-          <Flag
-            class="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-600 dark:text-slate-400"
-          />
-          <select
-            v-model="priority"
-            v-bind="priorityAttrs"
-            class="w-full appearance-none rounded-xl border border-blue-400/50 bg-blue-50/40 py-3 pl-11 pr-4 text-md text-slate-800 outline-none transition-all focus:border-blue-400 focus:bg-gray-100 focus:ring-2 focus:ring-blue-200/30 dark:border-slate-700 dark:bg-slate-900/90 dark:text-white dark:focus:border-blue-900/80 dark:focus:bg-slate-950/80 dark:focus:ring-blue-950/50"
-          >
-            <option value="LOW">Low</option>
-            <option value="MEDIUM">Medium</option>
-            <option value="HIGH">High</option>
-            <option value="CRITICAL">Critical</option>
-          </select>
-        </div>
+        <AppSelect v-model="priority" :options="priorityOptions" :icon="Flag" />
       </div>
 
       <div class="flex justify-end gap-3">
