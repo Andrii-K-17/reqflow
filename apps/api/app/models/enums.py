@@ -36,3 +36,22 @@ REQUIREMENT_CODE_PREFIX: dict[RequirementType, str] = {
     RequirementType.NONFUNCTIONAL: "NFR",
     RequirementType.SYSTEM: "SR",
 }
+
+
+class TraceEntityType(enum.Enum):
+    BUSINESS_GOAL = "BUSINESS_GOAL"
+    REQUIREMENT = "REQUIREMENT"
+    USE_CASE = "USE_CASE"
+    USER_STORY = "USER_STORY"
+
+
+class TraceRelation(enum.Enum):
+    DERIVES_FROM = "DERIVES_FROM"
+    SATISFIES = "SATISFIES"
+    CONFLICTS_WITH = "CONFLICTS_WITH"
+
+
+DEPENDENCY_RELATIONS = {
+    TraceRelation.DERIVES_FROM,
+    TraceRelation.SATISFIES,
+}
