@@ -51,6 +51,7 @@ class RequirementService:
             self._requirements.add(requirement)
             try:
                 await self._requirements.flush()
+                await self._requirements.refresh(requirement)
                 return requirement
             except IntegrityError as exc:
                 last_error = exc
@@ -108,6 +109,7 @@ class RequirementService:
             requirement.source = payload.source
 
         await self._requirements.flush()
+        await self._requirements.refresh(requirement)
 
         return requirement
 
