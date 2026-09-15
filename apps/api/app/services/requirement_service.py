@@ -12,6 +12,8 @@ from app.models.requirement import Requirement
 from app.repositories.requirement_repository import RequirementRepository
 from app.schemas.requirement import RequirementCreate, RequirementUpdate
 
+_MAX_CODE_GENERATION_ATTEMPTS = 5
+
 
 class RequirementService:
     def __init__(self, requirements: RequirementRepository) -> None:
@@ -34,7 +36,7 @@ class RequirementService:
 
         last_error: IntegrityError | None = None
 
-        for _ in range(5):
+        for _ in range(_MAX_CODE_GENERATION_ATTEMPTS):
             code = await self._generate_code(project_id=project_id, req_type=payload.type)
             requirement = Requirement(
                 project_id=project_id,

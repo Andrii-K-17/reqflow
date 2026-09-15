@@ -10,6 +10,7 @@ from app.api.routers import (
     requirements,
     stakeholders,
     use_cases,
+    user_stories,
 )
 from app.core.config import get_settings
 
@@ -32,3 +33,4 @@ app.include_router(stakeholders.router, prefix="/api")
 app.include_router(business_goals.router, prefix="/api")
 app.include_router(requirements.router, prefix="/api")
 app.include_router(use_cases.router, prefix="/api")
+app.include_router(user_stories.router, prefix="/api")
