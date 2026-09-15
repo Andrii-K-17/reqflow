@@ -96,6 +96,13 @@ const priorityOptions: SelectOption[] = [
         </p>
       </div>
 
+      <div class="mb-6">
+        <label class="mb-1.5 block text-md tracking-wider text-slate-700 dark:text-slate-300">
+          Priority
+        </label>
+        <AppSelect v-model="priority" :options="priorityOptions" :icon="Flag" />
+      </div>
+
       <div class="mb-5">
         <label class="mb-1.5 block text-md tracking-wider text-slate-700 dark:text-slate-300">
           Description (optional)
@@ -112,13 +119,6 @@ const priorityOptions: SelectOption[] = [
             class="w-full rounded-xl border border-blue-400/50 bg-blue-50/40 py-3 pl-11 pr-4 text-md text-slate-800 placeholder:text-slate-500/80 outline-none transition-all resize-none focus:border-blue-400 focus:bg-gray-100 focus:ring-2 focus:ring-blue-200/30 dark:border-slate-700 dark:bg-slate-900/90 dark:text-white dark:focus:border-blue-900/80 dark:focus:bg-slate-950/80 dark:focus:ring-blue-950/50"
           />
         </div>
-      </div>
-
-      <div class="mb-6">
-        <label class="mb-1.5 block text-md tracking-wider text-slate-700 dark:text-slate-300">
-          Priority
-        </label>
-        <AppSelect v-model="priority" :options="priorityOptions" :icon="Flag" />
       </div>
 
       <div class="flex justify-end gap-3">

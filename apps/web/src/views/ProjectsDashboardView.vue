@@ -61,7 +61,7 @@ function openProject(projectId: string) {
       </div>
     </header>
 
-    <div class="mx-auto max-w-4xl px-8 py-10">
+    <div class="mx-auto max-w-6xl px-8 py-10">
       <div class="mb-6 flex items-center justify-between">
         <h2 class="text-xl font-semibold text-slate-900 dark:text-white">My Projects</h2>
         <button
@@ -88,7 +88,7 @@ function openProject(projectId: string) {
         No projects yet. Create your first one.
       </div>
 
-      <ul v-else class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <ul v-else class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <li
           v-for="project in projects.projects"
           :key="project.id"

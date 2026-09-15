@@ -47,7 +47,7 @@ const router = createRouter({
         {
           path: 'use-cases',
           name: 'project-use-cases',
-          component: () => import('@/views/ProjectsDashboardView.vue'),
+          component: () => import('@/views/project/UseCasesView.vue'),
         },
         {
           path: 'diagrams',
