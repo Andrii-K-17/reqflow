@@ -18,6 +18,7 @@ import {
   SunIcon,
   MenuIcon,
   X,
+  BookOpen,
 } from '@lucide/vue'
 import { useDark, useToggle } from '@vueuse/core'
 
@@ -35,6 +36,7 @@ const navItems = [
   { name: 'project-vision', label: 'Vision / Concept', icon: Lightbulb },
   { name: 'project-requirements', label: 'Requirements', icon: ListChecks },
   { name: 'project-use-cases', label: 'Use Cases', icon: Users },
+  { name: 'project-user-stories', label: 'User Stories', icon: BookOpen },
   { name: 'project-diagrams', label: 'Diagrams', icon: Workflow },
   { name: 'project-traceability', label: 'Traceability', icon: GitBranch },
   { name: 'project-documents', label: 'Documents', icon: FileText },

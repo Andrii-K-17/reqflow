@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, reactive, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useUseCasesStore } from '@/stores/useCases'
 import type { AlternativeFlow } from '@/types/use-case'
@@ -22,12 +22,12 @@ const route = useRoute()
 const projectId = route.params.projectId as string
 const useCases = useUseCasesStore()
 
-const form = reactive({
+const form = ref({
   title: '',
   actorsText: '',
   preconditions: '',
   postconditions: '',
-  mainFlow: [''] as string[],
+  mainFlow: [''],
   altFlows: [] as AlternativeFlow[],
 })
 
@@ -36,12 +36,12 @@ const titleError = ref<string | null>(null)
 
 const hasUnsavedChanges = computed(() => {
   return (
-    form.title.trim() !== '' ||
-    form.actorsText.trim() !== '' ||
-    form.preconditions.trim() !== '' ||
-    form.postconditions.trim() !== '' ||
-    form.mainFlow.some(step => step.trim() !== '') ||
-    form.altFlows.length > 0
+    form.value.title.trim() !== '' ||
+    form.value.actorsText.trim() !== '' ||
+    form.value.preconditions.trim() !== '' ||
+    form.value.postconditions.trim() !== '' ||
+    form.value.mainFlow.some(step => step.trim() !== '') ||
+    form.value.altFlows.length > 0
   )
 })
 
@@ -53,31 +53,31 @@ function requestClose() {
 }
 
 function addMainStep() {
-  form.mainFlow.push('')
+  form.value.mainFlow.push('')
 }
 
 function removeMainStep(index: number) {
-  form.mainFlow.splice(index, 1)
+  form.value.mainFlow.splice(index, 1)
 }
 
 function addAltFlow() {
-  form.altFlows.push({ name: '', condition: '', steps: [''] })
+  form.value.altFlows.push({ name: '', condition: '', steps: [''] })
 }
 
 function removeAltFlow(index: number) {
-  form.altFlows.splice(index, 1)
+  form.value.altFlows.splice(index, 1)
 }
 
 function addAltStep(flowIndex: number) {
-  form.altFlows[flowIndex].steps.push('')
+  form.value.altFlows[flowIndex].steps.push('')
 }
 
 function removeAltStep(flowIndex: number, stepIndex: number) {
-  form.altFlows[flowIndex].steps.splice(stepIndex, 1)
+  form.value.altFlows[flowIndex].steps.splice(stepIndex, 1)
 }
 
 async function submit() {
-  if (!form.title.trim()) {
+  if (!form.value.title.trim()) {
     titleError.value = 'Please enter a use case name'
     return
   }
@@ -85,15 +85,15 @@ async function submit() {
   isSubmitting.value = true
   try {
     await useCases.create(projectId, {
-      title: form.title,
-      actors: form.actorsText
+      title: form.value.title,
+      actors: form.value.actorsText
         .split(',')
         .map(a => a.trim())
         .filter(Boolean),
-      preconditions: form.preconditions || undefined,
-      postconditions: form.postconditions || undefined,
-      main_flow: form.mainFlow.filter(step => step.trim() !== ''),
-      alternative_flows: form.altFlows
+      preconditions: form.value.preconditions || undefined,
+      postconditions: form.value.postconditions || undefined,
+      main_flow: form.value.mainFlow.filter(step => step.trim() !== ''),
+      alternative_flows: form.value.altFlows
         .filter(flow => flow.name.trim() !== '')
         .map(flow => ({ ...flow, steps: flow.steps.filter(s => s.trim() !== '') })),
     })

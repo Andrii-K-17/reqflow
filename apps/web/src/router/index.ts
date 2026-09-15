@@ -50,6 +50,11 @@ const router = createRouter({
           component: () => import('@/views/project/UseCasesView.vue'),
         },
         {
+          path: 'user-stories',
+          name: 'project-user-stories',
+          component: () => import('@/views/project/UserStoriesView.vue'),
+        },
+        {
           path: 'diagrams',
           name: 'project-diagrams',
           component: () => import('@/views/ProjectsDashboardView.vue'),
