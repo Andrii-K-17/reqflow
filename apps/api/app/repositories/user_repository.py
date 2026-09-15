@@ -17,8 +17,8 @@ class UserRepository:
     async def get_by_id(self, user_id: uuid.UUID) -> User | None:
         return await self._session.get(User, user_id)
 
-    async def create(self, *, email: str, hashed_password: str, full_name: str) -> User:
-        user = User(email=email, hashed_password=hashed_password, full_name=full_name)
+    def add(self, user: User) -> None:
         self._session.add(user)
+
+    async def flush(self) -> None:
         await self._session.flush()
-        return user

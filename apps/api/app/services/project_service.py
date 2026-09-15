@@ -1,6 +1,7 @@
 import uuid
+from datetime import UTC, datetime
 
-from app.models.project import Project, ProjectRole
+from app.models.project import Project, ProjectMember, ProjectRole
 from app.repositories.project_repository import ProjectRepository
 
 WRITE_ROLES = {ProjectRole.OWNER, ProjectRole.EDITOR}
@@ -25,7 +26,13 @@ class ProjectService:
         description: str | None,
         owner_id: uuid.UUID,
     ) -> tuple[Project, ProjectRole]:
-        project = await self._projects.create(name=name, description=description, owner_id=owner_id)
+        project = Project(name=name, description=description, owner_id=owner_id)
+        self._projects.add(project)
+        await self._projects.flush()
+        self._projects.add_member(
+            ProjectMember(project_id=project.id, user_id=owner_id, role=ProjectRole.OWNER)
+        )
+        await self._projects.flush()
         return project, ProjectRole.OWNER
 
     async def list_projects(self, user_id: uuid.UUID) -> list[tuple[Project, ProjectRole]]:
@@ -71,4 +78,5 @@ class ProjectService:
         project, role = await self.get_project(project_id=project_id, user_id=user_id)
         if role != ProjectRole.OWNER:
             raise ProjectAccessDeniedError("Only the owner can archive a project")
-        await self._projects.archive(project)
+        project.archived_at = datetime.now(UTC)
+        await self._projects.flush()

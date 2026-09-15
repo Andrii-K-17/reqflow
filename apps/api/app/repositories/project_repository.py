@@ -1,5 +1,4 @@
 import uuid
-from datetime import UTC, datetime
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -11,16 +10,11 @@ class ProjectRepository:
     def __init__(self, session: AsyncSession) -> None:
         self._session = session
 
-    async def create(self, *, name: str, description: str | None, owner_id: uuid.UUID) -> Project:
-        project = Project(name=name, description=description, owner_id=owner_id)
+    def add(self, project: Project) -> None:
         self._session.add(project)
-        await self._session.flush()
 
-        membership = ProjectMember(project_id=project.id, user_id=owner_id, role=ProjectRole.OWNER)
+    def add_member(self, membership: ProjectMember) -> None:
         self._session.add(membership)
-        await self._session.flush()
-
-        return project
 
     async def get_by_id(self, project_id: uuid.UUID) -> Project | None:
         return await self._session.get(Project, project_id)
@@ -48,10 +42,6 @@ class ProjectRepository:
         result = await self._session.execute(stmt)
 
         return result.scalar_one_or_none()
-
-    async def archive(self, project: Project) -> None:
-        project.archived_at = datetime.now(UTC)
-        await self._session.flush()
 
     async def flush(self) -> None:
         await self._session.flush()

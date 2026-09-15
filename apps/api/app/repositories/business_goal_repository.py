@@ -4,7 +4,6 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.business_goal import BusinessGoal
-from app.models.enums import Priority
 
 
 class BusinessGoalRepository:
@@ -29,28 +28,11 @@ class BusinessGoalRepository:
 
         return result.scalar_one_or_none()
 
-    async def create(
-        self,
-        *,
-        project_id: uuid.UUID,
-        title: str,
-        description: str | None,
-        priority: Priority,
-    ) -> BusinessGoal:
-        goal = BusinessGoal(
-            project_id=project_id,
-            title=title,
-            description=description,
-            priority=priority,
-        )
+    def add(self, goal: BusinessGoal) -> None:
         self._session.add(goal)
-        await self._session.flush()
-
-        return goal
 
     async def delete(self, goal: BusinessGoal) -> None:
         await self._session.delete(goal)
-        await self._session.flush()
 
     async def flush(self) -> None:
         await self._session.flush()

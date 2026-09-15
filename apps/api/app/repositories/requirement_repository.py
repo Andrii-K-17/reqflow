@@ -68,6 +68,3 @@ class RequirementRepository:
 
     async def flush(self) -> None:
         await self._session.flush()
-
-    async def refresh(self, requirement: Requirement) -> None:
-        await self._session.refresh(requirement)

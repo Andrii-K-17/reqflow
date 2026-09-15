@@ -3,7 +3,6 @@ import uuid
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.models.enums import StakeholderCategory
 from app.models.stakeholder import Stakeholder
 
 
@@ -27,27 +26,11 @@ class StakeholderRepository:
         result = await self._session.execute(stmt)
         return result.scalar_one_or_none()
 
-    async def create(
-        self,
-        *,
-        project_id: uuid.UUID,
-        name: str,
-        category: StakeholderCategory,
-        interest_description: str | None,
-    ) -> Stakeholder:
-        stakeholder = Stakeholder(
-            project_id=project_id,
-            name=name,
-            category=category,
-            interest_description=interest_description,
-        )
+    def add(self, stakeholder: Stakeholder) -> None:
         self._session.add(stakeholder)
-        await self._session.flush()
-        return stakeholder
 
     async def delete(self, stakeholder: Stakeholder) -> None:
         await self._session.delete(stakeholder)
-        await self._session.flush()
 
     async def flush(self) -> None:
         await self._session.flush()

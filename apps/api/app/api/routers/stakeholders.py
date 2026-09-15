@@ -8,12 +8,13 @@ from app.db.session import get_db
 from app.models.project import ProjectRole
 from app.repositories.stakeholder_repository import StakeholderRepository
 from app.schemas.stakeholder import StakeholderCreate, StakeholderRead, StakeholderUpdate
+from app.services.stakeholder_service import StakeholderService
 
 router = APIRouter(prefix="/projects/{project_id}/stakeholders", tags=["stakeholders"])
 
 
-def get_repo(db: AsyncSession = Depends(get_db)) -> StakeholderRepository:
-    return StakeholderRepository(db)
+def get_service(db: AsyncSession = Depends(get_db)) -> StakeholderService:
+    return StakeholderService(StakeholderRepository(db))
 
 
 @router.get(
@@ -22,9 +23,9 @@ def get_repo(db: AsyncSession = Depends(get_db)) -> StakeholderRepository:
     dependencies=[Depends(require_project_role(ProjectRole.VIEWER))],
 )
 async def list_stakeholders(
-    project_id: uuid.UUID, repo: StakeholderRepository = Depends(get_repo)
+    project_id: uuid.UUID, service: StakeholderService = Depends(get_service)
 ) -> list[StakeholderRead]:
-    return await repo.list_for_project(project_id)  # type: ignore
+    return await service.list_stakeholders(project_id)  # type: ignore
 
 
 @router.post(
@@ -37,15 +38,11 @@ async def create_stakeholder(
     project_id: uuid.UUID,
     payload: StakeholderCreate,
     db: AsyncSession = Depends(get_db),
-    repo: StakeholderRepository = Depends(get_repo),
+    service: StakeholderService = Depends(get_service),
 ) -> StakeholderRead:
-    stakeholder = await repo.create(
-        project_id=project_id,
-        name=payload.name,
-        category=payload.category,
-        interest_description=payload.interest_description,
-    )
+    stakeholder = await service.create_stakeholder(project_id=project_id, payload=payload)
     await db.commit()
+    await db.refresh(stakeholder)
     return stakeholder  # type: ignore
 
 
@@ -59,20 +56,13 @@ async def update_stakeholder(
     stakeholder_id: uuid.UUID,
     payload: StakeholderUpdate,
     db: AsyncSession = Depends(get_db),
-    repo: StakeholderRepository = Depends(get_repo),
+    service: StakeholderService = Depends(get_service),
 ) -> StakeholderRead:
-    stakeholder = await repo.get(project_id=project_id, stakeholder_id=stakeholder_id)
+    stakeholder = await service.update_stakeholder(
+        project_id=project_id, stakeholder_id=stakeholder_id, payload=payload
+    )
     if stakeholder is None:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Stakeholder not found")
-
-    if payload.name is not None:
-        stakeholder.name = payload.name
-    if payload.category is not None:
-        stakeholder.category = payload.category
-    if payload.interest_description is not None:
-        stakeholder.interest_description = payload.interest_description
-
-    await repo.flush()
     await db.commit()
     await db.refresh(stakeholder)
 
@@ -88,10 +78,9 @@ async def delete_stakeholder(
     project_id: uuid.UUID,
     stakeholder_id: uuid.UUID,
     db: AsyncSession = Depends(get_db),
-    repo: StakeholderRepository = Depends(get_repo),
+    service: StakeholderService = Depends(get_service),
 ) -> None:
-    stakeholder = await repo.get(project_id=project_id, stakeholder_id=stakeholder_id)
-    if stakeholder is None:
+    deleted = await service.delete_stakeholder(project_id=project_id, stakeholder_id=stakeholder_id)
+    if not deleted:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Stakeholder not found")
-    await repo.delete(stakeholder)
     await db.commit()

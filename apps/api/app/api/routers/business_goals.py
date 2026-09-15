@@ -8,12 +8,13 @@ from app.db.session import get_db
 from app.models.project import ProjectRole
 from app.repositories.business_goal_repository import BusinessGoalRepository
 from app.schemas.business_goal import BusinessGoalCreate, BusinessGoalRead, BusinessGoalUpdate
+from app.services.business_goal_service import BusinessGoalService
 
 router = APIRouter(prefix="/projects/{project_id}/business-goals", tags=["business-goals"])
 
 
-def get_repo(db: AsyncSession = Depends(get_db)) -> BusinessGoalRepository:
-    return BusinessGoalRepository(db)
+def get_service(db: AsyncSession = Depends(get_db)) -> BusinessGoalService:
+    return BusinessGoalService(BusinessGoalRepository(db))
 
 
 @router.get(
@@ -22,9 +23,9 @@ def get_repo(db: AsyncSession = Depends(get_db)) -> BusinessGoalRepository:
     dependencies=[Depends(require_project_role(ProjectRole.VIEWER))],
 )
 async def list_business_goals(
-    project_id: uuid.UUID, repo: BusinessGoalRepository = Depends(get_repo)
+    project_id: uuid.UUID, service: BusinessGoalService = Depends(get_service)
 ) -> list[BusinessGoalRead]:
-    return await repo.list_for_project(project_id)  # type: ignore
+    return await service.list_business_goals(project_id)  # type: ignore
 
 
 @router.post(
@@ -37,15 +38,11 @@ async def create_business_goal(
     project_id: uuid.UUID,
     payload: BusinessGoalCreate,
     db: AsyncSession = Depends(get_db),
-    repo: BusinessGoalRepository = Depends(get_repo),
+    service: BusinessGoalService = Depends(get_service),
 ) -> BusinessGoalRead:
-    goal = await repo.create(
-        project_id=project_id,
-        title=payload.title,
-        description=payload.description,
-        priority=payload.priority,
-    )
+    goal = await service.create_business_goal(project_id=project_id, payload=payload)
     await db.commit()
+    await db.refresh(goal)
     return goal  # type: ignore
 
 
@@ -59,20 +56,13 @@ async def update_business_goal(
     goal_id: uuid.UUID,
     payload: BusinessGoalUpdate,
     db: AsyncSession = Depends(get_db),
-    repo: BusinessGoalRepository = Depends(get_repo),
+    service: BusinessGoalService = Depends(get_service),
 ) -> BusinessGoalRead:
-    goal = await repo.get(project_id=project_id, goal_id=goal_id)
+    goal = await service.update_business_goal(
+        project_id=project_id, goal_id=goal_id, payload=payload
+    )
     if goal is None:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Business goal not found")
-
-    if payload.title is not None:
-        goal.title = payload.title
-    if payload.description is not None:
-        goal.description = payload.description
-    if payload.priority is not None:
-        goal.priority = payload.priority
-
-    await repo.flush()
     await db.commit()
     await db.refresh(goal)
 
@@ -88,10 +78,9 @@ async def delete_business_goal(
     project_id: uuid.UUID,
     goal_id: uuid.UUID,
     db: AsyncSession = Depends(get_db),
-    repo: BusinessGoalRepository = Depends(get_repo),
+    service: BusinessGoalService = Depends(get_service),
 ) -> None:
-    goal = await repo.get(project_id=project_id, goal_id=goal_id)
-    if goal is None:
+    deleted = await service.delete_business_goal(project_id=project_id, goal_id=goal_id)
+    if not deleted:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Business goal not found")
-    await repo.delete(goal)
     await db.commit()

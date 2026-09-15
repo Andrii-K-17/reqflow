@@ -25,9 +25,14 @@ class AuthService:
     async def register(self, *, email: str, password: str, full_name: str) -> User:
         if await self._users.get_by_email(email) is not None:
             raise EmailAlreadyRegisteredError(f"Email {email} is already registered")
-        return await self._users.create(
-            email=email, hashed_password=hash_password(password), full_name=full_name
+        user = User(
+            email=email,
+            hashed_password=hash_password(password),
+            full_name=full_name,
         )
+        self._users.add(user)
+        await self._users.flush()
+        return user
 
     async def authenticate(self, *, email: str, password: str) -> User:
         user = await self._users.get_by_email(email)

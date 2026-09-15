@@ -67,6 +67,7 @@ async def create_requirement(
 ) -> RequirementRead:
     requirement = await service.create_requirement(project_id=project_id, payload=payload)
     await db.commit()
+    await db.refresh(requirement)
     return requirement  # type: ignore
 
 
@@ -106,6 +107,7 @@ async def update_requirement(
     if requirement is None:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Requirement not found")
     await db.commit()
+    await db.refresh(requirement)
     return requirement  # type: ignore
 
 
