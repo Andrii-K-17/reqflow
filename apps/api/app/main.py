@@ -9,6 +9,7 @@ from app.api.routers import (
     projects,
     requirements,
     stakeholders,
+    trace_links,
     use_cases,
     user_stories,
 )
@@ -34,3 +35,4 @@ app.include_router(business_goals.router, prefix="/api")
 app.include_router(requirements.router, prefix="/api")
 app.include_router(use_cases.router, prefix="/api")
 app.include_router(user_stories.router, prefix="/api")
+app.include_router(trace_links.router, prefix="/api")
