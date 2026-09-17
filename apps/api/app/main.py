@@ -5,6 +5,7 @@ import app.models
 from app.api.routers import (
     auth,
     business_goals,
+    diagrams,
     health,
     projects,
     requirements,
@@ -36,3 +37,4 @@ app.include_router(requirements.router, prefix="/api")
 app.include_router(use_cases.router, prefix="/api")
 app.include_router(user_stories.router, prefix="/api")
 app.include_router(trace_links.router, prefix="/api")
+app.include_router(diagrams.router, prefix="/api")
