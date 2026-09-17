@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: postgres:16-alpine
+        image: postgres
         env:
           POSTGRES_USER: reqflow
           POSTGRES_PASSWORD: reqflow
@@ -26,23 +26,28 @@ jobs:
       run:
         working-directory: apps/api
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - name: Checkout repository
+        uses: actions/checkout@v7
+      - name: Setup uv and Python
+        uses: astral-sh/setup-uv@v5
         with:
+          version: "latest"
           python-version: "3.12"
-      - name: Install uv
-        run: pip install uv
+          enable-cache: true
       - name: Install dependencies
-        run: uv pip install --system -e ".[dev]"
+        run: uv pip install -e ".[dev]"
+
       - name: Ruff lint
-        run: ruff check .
-      - name: Mypy
-        run: mypy app
+        run: uv run ruff check .
+
+      - name: Mypy type check
+        run: uv run mypy app
+
       - name: Pytest
         env:
           DATABASE_URL: postgresql+asyncpg://reqflow:reqflow@localhost:5432/reqflow
           JWT_SECRET: test-secret
-        run: pytest --cov=app
+        run: uv run pytest --cov=app
 
   web:
     runs-on: ubuntu-latest
@@ -50,16 +55,13 @@ jobs:
       run:
         working-directory: apps/web
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 9
+      - uses: actions/checkout@v7
+      - uses: pnpm/setup@v2
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: pnpm
           cache-dependency-path: apps/web/pnpm-lock.yaml
       - run: pnpm install
       - run: pnpm lint
-      - run: vue-tsc -b --noEmit
-      - run: pnpm test -- --run
+      - run: pnpm test run
