@@ -149,7 +149,7 @@ async function submit() {
     @click.self="requestClose"
   >
     <div
-      class="flex max-h-[85vh] w-full max-w-lg flex-col rounded-xl border border-blue-400/30 bg-white shadow-lg dark:border-slate-700 dark:bg-slate-900"
+      class="flex max-h-[90vh] w-full max-w-lg flex-col rounded-xl border border-blue-400/30 bg-white shadow-lg dark:border-slate-700 dark:bg-slate-900"
     >
       <div
         class="flex shrink-0 items-center justify-between border-b border-blue-400/20 px-8 py-6 dark:border-slate-800"
@@ -232,7 +232,7 @@ async function submit() {
       </div>
 
       <div
-        class="flex shrink-0 justify-end gap-3 border-t border-blue-400/20 px-8 py-6 dark:border-slate-800"
+        class="flex shrink-0 justify-end gap-3 border-t border-blue-400/20 px-8 py-3 dark:border-slate-800"
       >
         <button
           type="button"

@@ -81,7 +81,7 @@ onMounted(() => {
       </div>
 
       <div class="flex lg:hidden truncate items-center gap-2 px-5">
-        <div class="rounded-lg bg-sky-100 px-1.5 text-sky-500">
+        <div class="rounded-lg bg-sky-100 px-1.5 text-sky-500 dark:bg-sky-900/30">
           <FolderKanban class="h-4 w-4" />
         </div>
 
@@ -100,7 +100,9 @@ onMounted(() => {
           <MoonIcon v-else class="w-5 h-5" />
         </button>
 
-        <span class="text-base text-slate-700 dark:text-slate-300">{{ auth.user?.full_name }}</span>
+        <span class="text-base text-slate-700 dark:text-slate-300">
+          {{ auth.user?.full_name }}
+        </span>
 
         <button
           class="flex items-center gap-1.5 text-base text-slate-600 transition-colors hover:text-blue-500 dark:text-slate-400 dark:hover:text-blue-400 hover:cursor-pointer"
@@ -123,9 +125,9 @@ onMounted(() => {
         class="absolute inset-y-0 left-0 z-40 flex w-64 flex-col overflow-hidden border-r border-blue-400/30 bg-white/95 backdrop-blur-sm transition-transform duration-300 dark:border-slate-800 dark:bg-slate-900/95 lg:relative lg:z-0 lg:translate-x-0 lg:bg-white/70 lg:dark:bg-slate-900/70"
         :class="isSidebarOpen ? 'translate-x-0' : '-translate-x-full'"
       >
-        <div class="hidden border-b border-blue-400/30 px-2 py-4 dark:border-slate-800 lg:block">
+        <div class="hidden border-b border-blue-400/30 px-4 py-4 dark:border-slate-800 lg:block">
           <div class="flex items-center gap-2">
-            <div class="rounded-lg bg-sky-100 p-1.5 text-sky-500">
+            <div class="rounded-lg bg-sky-100 p-1.5 text-sky-500 dark:bg-sky-900/30">
               <FolderKanban class="h-4 w-4" />
             </div>
 
@@ -135,7 +137,7 @@ onMounted(() => {
           </div>
         </div>
 
-        <nav class="flex flex-1 min-h-0 flex-col gap-1 overflow-y-auto scrollbar-thin p-3">
+        <nav class="flex flex-1 min-h-0 flex-col gap-1 overflow-y-auto scrollbar-thin p-2">
           <router-link
             v-for="item in navItems"
             :key="item.name"

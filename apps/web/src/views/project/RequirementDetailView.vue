@@ -152,7 +152,7 @@ async function removeLink(linkId: string) {
       <div>
         <div class="mb-2 flex flex-col items-start">
           <h3
-            class="flex items-center gap-1.5 text-sm font-medium uppercase tracking-wider text-slate-400 dark:text-slate-500"
+            class="flex items-center gap-1.5 text-sm pb-1 font-medium uppercase tracking-wider text-slate-400 dark:text-slate-500"
           >
             <GitBranch class="h-3.5 w-3.5" />
             Traceability
@@ -164,11 +164,11 @@ async function removeLink(linkId: string) {
           >
             No links yet.
           </p>
-          <ul v-else class="space-y-1.5">
+          <ul v-else class="space-y-1.5 w-full">
             <li
               v-for="link in traceLinks.linksFor('REQUIREMENT', requirement.id)"
               :key="link.id"
-              class="flex items-center justify-between gap-2 rounded-xl bg-blue-50/60 px-3 py-2 text-sm text-slate-600 dark:bg-slate-800/60 dark:text-slate-400"
+              class="flex items-center justify-between gap-2 rounded-xl bg-blue-50/60 px-3 py-1 text-sm text-slate-600 dark:bg-slate-800/60 dark:text-slate-400"
             >
               <span class="flex items-center gap-1.5">
                 <Link2 class="h-3.5 w-3.5 shrink-0 text-slate-400 dark:text-slate-500" />
@@ -179,7 +179,7 @@ async function removeLink(linkId: string) {
 
                 <Minus class="h-3 w-3 shrink-0 text-slate-400 dark:text-slate-500" />
 
-                <span class="text-xs text-slate-500 dark:text-slate-400">
+                <span class="text-sm text-slate-500 dark:text-slate-400">
                   {{ link.relation }}
                 </span>
 
@@ -194,7 +194,6 @@ async function removeLink(linkId: string) {
                 @click="removeLink(link.id)"
               >
                 <Trash2 class="h-3.5 w-3.5" />
-                Remove
               </button>
             </li>
           </ul>
