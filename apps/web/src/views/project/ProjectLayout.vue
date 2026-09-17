@@ -80,7 +80,7 @@ onMounted(() => {
         </router-link>
       </div>
 
-      <div class="flex lg:hidden truncate items-center gap-2 px-5 py-4">
+      <div class="flex lg:hidden truncate items-center gap-2 px-5">
         <div class="rounded-lg bg-sky-100 px-1.5 text-sky-500">
           <FolderKanban class="h-4 w-4" />
         </div>
@@ -140,7 +140,7 @@ onMounted(() => {
             v-for="item in navItems"
             :key="item.name"
             :to="{ name: item.name, params: { projectId } }"
-            class="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-base text-slate-700 hover:bg-blue-50/70 dark:text-slate-300 dark:hover:bg-slate-800/70"
+            class="flex items-center transition-all gap-2.5 rounded-xl px-3 py-2.5 text-base text-slate-700 hover:bg-blue-50/70 dark:text-slate-300 dark:hover:bg-slate-800/70"
             active-class="!bg-sky-500 !text-white"
             @click="isSidebarOpen = false"
           >
@@ -149,7 +149,7 @@ onMounted(() => {
           </router-link>
         </nav>
 
-        <div class="flex border-t border-blue-400/30 px-2 py-4 dark:border-slate-800">
+        <div class="flex border-t border-blue-400/30 px-4 py-4 dark:border-slate-800">
           <router-link
             :to="{ name: 'projects' }"
             class="flex items-center gap-1.5 text-base text-slate-600 transition-colors hover:text-blue-500 dark:text-slate-400 dark:hover:text-blue-400"

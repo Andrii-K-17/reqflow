@@ -62,7 +62,7 @@ const router = createRouter({
         {
           path: 'traceability',
           name: 'project-traceability',
-          component: () => import('@/views/ProjectsDashboardView.vue'),
+          component: () => import('@/views/project/TraceabilityMatrixView.vue'),
         },
         {
           path: 'documents',

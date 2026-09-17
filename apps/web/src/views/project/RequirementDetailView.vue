@@ -2,7 +2,9 @@
 import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useRequirementsStore } from '@/stores/requirements'
+import { useTraceLinksStore } from '@/stores/traceLinks'
 import RequirementBadges from '@/components/RequirementBadges.vue'
+import LinkEntityModal from '@/components/LinkEntityModal.vue'
 import type { Requirement, RequirementStatus } from '@/types/requirement'
 import {
   ArrowLeft,
@@ -11,10 +13,14 @@ import {
   Lightbulb,
   Quote,
   GitBranch,
+  Plus,
+  Link2,
+  Trash2,
   Loader2,
   CheckCircle2,
-  Trash2,
   XCircle,
+  ArrowRight,
+  Minus,
 } from '@lucide/vue'
 
 const route = useRoute()
@@ -23,8 +29,10 @@ const projectId = route.params.projectId as string
 const requirementId = route.params.requirementId as string
 
 const requirements = useRequirementsStore()
+const traceLinks = useTraceLinksStore()
 const requirement = ref<Requirement | null>(null)
 const isLoading = ref(true)
+const isLinkModalOpen = ref(false)
 
 const statusOptions: RequirementStatus[] = ['DRAFT', 'REVIEWED', 'APPROVED', 'REJECTED']
 
@@ -32,6 +40,7 @@ async function load() {
   isLoading.value = true
   try {
     requirement.value = await requirements.fetchOne(projectId, requirementId)
+    if (traceLinks.items.length === 0) await traceLinks.fetch(projectId)
   } finally {
     isLoading.value = false
   }
@@ -56,6 +65,11 @@ async function removeRequirement() {
   await requirements.remove(projectId, requirementId)
   router.push({ name: 'project-requirements', params: { projectId } })
 }
+
+async function removeLink(linkId: string) {
+  if (!confirm('Delete this link?')) return
+  await traceLinks.remove(projectId, linkId)
+}
 </script>
 
 <template>
@@ -78,9 +92,9 @@ async function removeRequirement() {
 
     <div class="mb-4 flex items-start justify-between gap-4">
       <div>
-        <span class="font-mono text-sm text-slate-400 dark:text-slate-500">{{
-          requirement.code
-        }}</span>
+        <span class="font-mono text-sm text-slate-400 dark:text-slate-500">
+          {{ requirement.code }}
+        </span>
         <h2 class="text-xl font-semibold text-slate-900 dark:text-white">
           {{ requirement.title }}
         </h2>
@@ -136,13 +150,62 @@ async function removeRequirement() {
       </div>
 
       <div>
-        <h3
-          class="mb-1.5 flex items-center gap-1.5 text-sm font-medium uppercase tracking-wider text-slate-400 dark:text-slate-500"
+        <div class="mb-2 flex flex-col items-start">
+          <h3
+            class="flex items-center gap-1.5 text-sm font-medium uppercase tracking-wider text-slate-400 dark:text-slate-500"
+          >
+            <GitBranch class="h-3.5 w-3.5" />
+            Traceability
+          </h3>
+
+          <p
+            v-if="traceLinks.linksFor('REQUIREMENT', requirement.id).length === 0"
+            class="text-sm text-slate-400 dark:text-slate-500"
+          >
+            No links yet.
+          </p>
+          <ul v-else class="space-y-1.5">
+            <li
+              v-for="link in traceLinks.linksFor('REQUIREMENT', requirement.id)"
+              :key="link.id"
+              class="flex items-center justify-between gap-2 rounded-xl bg-blue-50/60 px-3 py-2 text-sm text-slate-600 dark:bg-slate-800/60 dark:text-slate-400"
+            >
+              <span class="flex items-center gap-1.5">
+                <Link2 class="h-3.5 w-3.5 shrink-0 text-slate-400 dark:text-slate-500" />
+
+                <span class="font-medium text-slate-800 dark:text-slate-200">
+                  {{ link.from_type }}
+                </span>
+
+                <Minus class="h-3 w-3 shrink-0 text-slate-400 dark:text-slate-500" />
+
+                <span class="text-xs text-slate-500 dark:text-slate-400">
+                  {{ link.relation }}
+                </span>
+
+                <ArrowRight class="h-3.5 w-3.5 shrink-0 text-slate-400 dark:text-slate-500" />
+
+                <span class="font-medium text-slate-800 dark:text-slate-200">
+                  {{ link.to_type }}
+                </span>
+              </span>
+              <button
+                class="flex items-center gap-1 text-red-500 transition-colors hover:text-red-600 dark:text-red-400 dark:hover:text-red-300 hover:cursor-pointer"
+                @click="removeLink(link.id)"
+              >
+                <Trash2 class="h-3.5 w-3.5" />
+                Remove
+              </button>
+            </li>
+          </ul>
+        </div>
+        <button
+          class="flex items-center px-3 gap-1 text-sm text-slate-500 transition-colors hover:text-blue-500 dark:text-slate-400 dark:hover:text-blue-400 hover:cursor-pointer"
+          @click="isLinkModalOpen = true"
         >
-          <GitBranch class="h-3.5 w-3.5" />
-          Traceability
-        </h3>
-        <p class="text-sm text-slate-400 dark:text-slate-500">Links to use cases</p>
+          <Plus class="h-3.5 w-3.5" />
+          Add link
+        </button>
       </div>
     </div>
 
@@ -180,5 +243,12 @@ async function removeRequirement() {
         Delete requirement
       </button>
     </div>
+
+    <LinkEntityModal
+      v-if="isLinkModalOpen"
+      source-type="REQUIREMENT"
+      :source-id="requirement.id"
+      @close="isLinkModalOpen = false"
+    />
   </section>
 </template>
