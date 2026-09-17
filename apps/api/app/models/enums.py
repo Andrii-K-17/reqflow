@@ -55,3 +55,12 @@ DEPENDENCY_RELATIONS = {
     TraceRelation.DERIVES_FROM,
     TraceRelation.SATISFIES,
 }
+
+
+class DiagramType(enum.Enum):
+    USE_CASE = "USE_CASE"
+    ER = "ER"
+    CLASS = "CLASS"
+    ACTIVITY = "ACTIVITY"
+    SEQUENCE = "SEQUENCE"
+    STATE = "STATE"

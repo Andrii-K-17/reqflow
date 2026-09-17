@@ -1,6 +1,8 @@
 from app.models.business_goal import BusinessGoal
+from app.models.diagram import Diagram
 from app.models.enums import (
     DEPENDENCY_RELATIONS,
+    DiagramType,
     Priority,
     RequirementStatus,
     RequirementType,
@@ -34,4 +36,6 @@ __all__ = [
     "TraceEntityType",
     "TraceRelation",
     "DEPENDENCY_RELATIONS",
+    "DiagramType",
+    "Diagram",
 ]
